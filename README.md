@@ -63,3 +63,23 @@ Type in the terminal `rails db:migrate` and refreshing the page.
 5. Type in the url: https://super-duper-robot-g54j6jv7rg6fvpvq-3000.app.github.dev/movies. You will see a form.
 
 (8 min) Try adding a movie, It was successful on my end. On the video, clicking on the button led to `/insert_movie` route which led to actioncontroller::invalidauthenticitytoken. 
+
+The message shown in the video is:
+
+lib/action_controller/metal/request_forgery_protection.rb
+
+```
+def handle_unverified_request
+    raise ActionController::InvalidAuthenticityToken
+end
+```
+
+(9 min-10 min)
+
+Look at routes.rb:
+
+```
+  post("/insert_movie", { :controller => "movies", :action => "create" })
+```
+
+The above code shows that the route calls controller class and calls create method.
