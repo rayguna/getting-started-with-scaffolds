@@ -12,7 +12,7 @@
       </div>
 
       <div>
-        <a href="/delete_movie/<%= @the_movie.id %>">
+        <a href="/movies/<%= @the_movie.id %>">
           Delete movie
         </a>
       </div>
@@ -66,7 +66,7 @@
       Edit movie
     </h2>
 
-    <form action="/modify_movie/<%= @the_movie.id %>"  method="post" >
+    <form action="/movies/<%= @the_movie.id %>"  method="post" >
       <div>
         <label for="title_box">
           Title
