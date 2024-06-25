@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   # DELETE
   #get("/delete_movie/:path_id", { :controller => "movies", :action => "destroy" })
-  get("/movies/:path_id", { :controller => "movies", :action => "destroy" })
+  delete("/movies/:path_id", { :controller => "movies", :action => "destroy" })
 
   #------------------------------
 

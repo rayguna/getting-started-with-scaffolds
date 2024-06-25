@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
     matching_movies = Movie.where({ :id => the_id })
 
     #@the_movie = matching_movies.at(0)
-    @the_movie = matching_movies.[0]
+    @the_movie = matching_movies[0]
 
     render({ :template => "movies/show" })
   end
