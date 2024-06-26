@@ -405,3 +405,54 @@ class BooksController < ApplicationController
   end
   ...
 ```
+
+### K. Add a new route for movies, "/movies/new"
+
+1. Add the http get in routes.rb:
+
+```
+# config/routes.rb
+
+Rails.application.routes.draw do
+  resources :books
+
+  # Routes for the Movie resource:
+
+  get("/movies/new", { :controller => "movies", :action => "new" })
+```
+
+2. Add the new method within movies_controller.rb.
+
+```
+# app/controllers/movies_controller.rb
+
+class MoviesController < ApplicationController
+  def new
+    render template: "movies/new"
+  end
+  # ...
+```
+
+3. Create the new.html.erb page:
+
+```
+<!-- app/views/movies/new.html.erb -->
+
+<h2>
+  Add a new movie
+</h2>
+
+<form action="/movies" method="post" data-turbo="false">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+  <!-- ... -->
+
+  <button>
+    Create movie
+  </button>
+</form>
+```
+
+### L. Edit the show page
+
+
