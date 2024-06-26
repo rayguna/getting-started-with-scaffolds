@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
+  resources :books
   # Routes for the Movie resource:
+
+   # Routes for the Movie resource:
+
+   get("/movies/new", { :controller => "movies", :action => "new" })
 
   # CREATE
   #post("/insert_movie", { :controller => "movies", :action => "create" })

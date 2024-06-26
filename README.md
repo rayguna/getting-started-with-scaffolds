@@ -266,7 +266,11 @@ into
   delete("/movies/:id", { :controller => "movies", :action => "destroy" })
 ```
 
-### H. Make book table using the rails generate scaffold commmand
+### H. No .at(0)
+1. Make sure to replce all of .at(0) to [0] in all methods of the movie_controller.rb file.
+
+
+### I. Make book table using the rails generate scaffold commmand
 (48 min))
 
 1. In the terminal type: 
@@ -297,3 +301,107 @@ rake db:migrate
 5. Table exists, as a result, but the routes don't exist!
 
 6. Within routes, only one line is generated: `resources:books`
+
+### J. The Scaffold command
+
+1. Rather than using the draft:resource: command to generate tables automatically by executing the entire RCAV routine, we can use the scaffold method. The scaffold method, however, generates the series of files that conform to the industria conventions that we just went through in the above, where we changes the non-industrial convention naming in the files generated using the darft:resource command.
+
+2. The scaffold command for generating book table is as follows.
+
+```
+rails generate scaffold book title:string description:text released:boolean
+```
+
+Here is the output:
+
+```
+getting-started-with-scaffolds main % rails generate scaffold book title:string description:text released:boolean
+      invoke  active_record
+      create    db/migrate/20240626025622_create_books.rb
+      create    app/models/book.rb
+      invoke  resource_route
+       route    resources :books
+      invoke  scaffold_controller
+      create    app/controllers/books_controller.rb
+      invoke    erb
+      create      app/views/books
+      create      app/views/books/index.html.erb
+      create      app/views/books/edit.html.erb
+      create      app/views/books/show.html.erb
+      create      app/views/books/new.html.erb
+      create      app/views/books/_form.html.erb
+      create      app/views/books/_book.html.erb
+      invoke    resource_route
+      invoke    jbuilder
+      create      app/views/books/index.json.jbuilder
+      create      app/views/books/show.json.jbuilder
+      create      app/views/books/_book.json.jbuilder
+```
+3. Next, type `rails db:migrate` to execute the migrate commands.
+
+**Amazing!** Unlike the draft:resource generator, I didn’t have to add a gem to get this to run. It’s just built in to Rails.
+
+4. Visit: https://super-duper-robot-g54j6jv7rg6fvpvq-3000.app.github.dev/rails/db. You will find that the books table has been generated.
+
+5. Look at the config/routes.rb table. You will find that only one line has been generated associated with the book table:
+
+```
+resources :books
+```
+Also, visit: https://super-duper-robot-g54j6jv7rg6fvpvq-3000.app.github.dev/rails/info
+
+Here, you will find all the routes associated with the book table. 
+
+6. Next, review `# app/controller/books_controller.rb`.
+
+```
+# app/controller/books_controller.rb
+
+class BooksController < ApplicationController
+  before_action :set_book, only: %i[ show edit update destroy ]
+
+  # GET /books or /books.json
+  def index
+    @books = Book.all
+  end
+
+  # GET /books/1 or /books/1.json
+  def show
+  end
+
+  # GET /books/new
+  def new
+    @book = Book.new
+  end
+
+  # GET /books/1/edit
+  def edit
+  end
+# ...
+```
+
+Notice how short the codes are. As long as conventional naming is used, rails can figure it out and all boiler plates can be removed.
+
+7. Here’s an example of where scaffold added code that we haven’t seen:
+
+```
+# app/controller/books_controller.rb
+
+class BooksController < ApplicationController
+  # ...
+  # POST /books or /books.json
+  def create
+    @book = Book.new(book_params)
+
+    respond_to do |format|
+      if @book.save
+        format.html { redirect_to book_url(@book), notice: "Book was successfully created." }
+        format.json { render :show, status: :created, location: @book }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @book.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  ...
+```

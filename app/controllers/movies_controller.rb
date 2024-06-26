@@ -1,4 +1,8 @@
 class MoviesController < ApplicationController
+  def new
+    render template: "movies/new"
+  end
+
   def index
     matching_movies = Movie.all
 
@@ -12,7 +16,7 @@ class MoviesController < ApplicationController
 
     matching_movies = Movie.where({ :id => the_id })
 
-    #@the_movie = matching_movies.at(0)
+    #@the_movie = matching_movies[0] #.at(0)
     @the_movie = matching_movies[0]
 
     render({ :template => "movies/show" })
@@ -34,7 +38,7 @@ class MoviesController < ApplicationController
 
   def update
     the_id = params.fetch("id")
-    the_movie = Movie.where({ :id => the_id }).at(0)
+    the_movie = Movie.where({ :id => the_id })[0] #.at(0)
 
     the_movie.title = params.fetch("query_title")
     the_movie.description = params.fetch("query_description")
