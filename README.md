@@ -503,3 +503,14 @@ to this:
 ```
 redirect_to("/movies/new", { :alert => the_movie.errors.full_messages.to_sentence })
 ```
+
+### N. Complete the edit.html.erb form
+
+Modify edit.html.erb form into:
+
+```
+<form action="/movies/<%= @the_movie.id %>" method="post" data-turbo="false">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+    <input type="hidden" name="_method" value="patch">
+```
