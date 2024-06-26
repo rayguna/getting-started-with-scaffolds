@@ -50,6 +50,25 @@ getting-started-with-scaffolds main % rails generate draft:resource movie title:
       insert  config/routes.rb
 ```
 
+5. STOP. Before you proceed, please add the following to the two new and edit forms on the index and show pages:
+
+```
+<!-- app/views/movies/index.html.erb -->
+
+<form action="/insert_movie" method="post" data-turbo="false">
+
+```
+
+and 
+
+```
+<!-- app/views/movies/show.html.erb -->
+
+<form action="/modify_movie/<%= @the_movie.id %>"  method="post" data-turbo="false">
+```
+
+We had to disable turno because it is enabled by default.
+
 ### B. Adding a security layer to your form to prevent cross-site request forgery
 
 Running the app with bin/dev resulted in an error message. I 
@@ -98,13 +117,16 @@ The above code shows that the route calls controller class and calls create meth
 ```
 <form action="/insert_movie" method="post">
   <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
-  <input type="hidden" name="_method" value="patch">
+
+  <input type="hidden" name="_method" value="patch"> <!-- this command line is to indicate that the method is a type patch or post-->
 ```
 7. Make it a habit to add the above script for any post or delete forms.
 
 8. helper method example, time_ago_in_words(Time.now)
 
-9. Change the routes as follows:
+### C. RESTful routes - industrial grade
+
+1. Change the routes as follows. Note that the routes all begin with the table name. Also, the http verbs are more than just get and post. Here, we introduce patch and delete verbs. Since the root routes are the same "/movie", in the html forms, we must add the helper command to indicate the routes role (i.e., get, post, patch, or delete) as discussed above.
 
 ```
   #post("/insert_movie", { :controller => "movies", :action => "create" })
@@ -128,14 +150,14 @@ The above code shows that the route calls controller class and calls create meth
 
 (12 min)
 
-Note the path name convention. The name should only identify the resource we are working with, rather than describing what we are trying to do.
+2. Note the path name convention. The name should only identify the resource we are working with, rather than describing what we are trying to do.
 
 (25 min: URI naming convention)
-RESTful routes: The widely accepted naming convention for routes is such that we shoud adopt RESTful routing. In particular, we should not use CRUD functions names in URIs. URIs should not be used to indicate that a CRUD function is performed. URIs should be used to uniquely identify resources and not any action upon them.
+3. RESTful routes: The widely accepted naming convention for routes is such that we shoud adopt RESTful routing. In particular, we should not use CRUD functions names in URIs. URIs should not be used to indicate that a CRUD function is performed. URIs should be used to uniquely identify resources and not any action upon them.
 
-On the other hand, the *HTTP request methods* should be used to indicate which CRUD function is performed.
+4. On the other hand, the *HTTP request methods* should be used to indicate which CRUD function is performed.
 
-The names of the routes start with slash and then the plural version of the table name.
+5. The names of the routes start with slash and then the plural version of the table name.
 
 (27 min) Up to this point, we have been introduced to new HTTP verbs:
 - post
@@ -143,17 +165,29 @@ The names of the routes start with slash and then the plural version of the tabl
 - patch (or update)
 - delete
 
-Also, all routes start with the table names, e.g., /movies/.
+6. Also, all routes start with the table names, e.g., /movies/.
 
-Even though the routings are the same, note that the HTTP verbs are different and the :action methods are different too. 
+7. Even though the routings are the same, note that the HTTP verbs are different and the :action methods are different too. 
 
-By changing the routing names to movies, it becomes harder to hack into the web app because all the buttons are triggered by calling the correct methods.
+8. By changing the routing names to movies, it becomes harder to hack into the web app because all the buttons are triggered by calling the correct methods.
 
-(27 min) Accordingly, update the form action links in the index.html.erb page.
+9. (27 min) Accordingly, update the form action links in the index.html.erb page.
 
-(28 min) Is it a security issue to use verb in the url? Not really, only the get to post is a security patch. By using route that match the table name, we are following the developer standard.
+10. (28 min) Is it a security issue to use verb in the url? Not really, only the get to post is a security patch. By using route that match the table name, we are following the developer standard.
 
-### C. RESTful
+11.In addition to using the different http verbs (i.e., post, get, patch, and delete) and changing the routes root to the table names, the corresponding form tags must also contain the helper commands, e.g., 
+
+Change this
+```
+<form action="/insert_movie" method="post" data-turbo="false">
+```
+
+To this
+```
+<form action="/movies" method="post" data-turbo="false">
+```
+
+### D. RESTful
 
 1. RESTful convention.
 2. "/plural_table_name/"
@@ -162,17 +196,77 @@ By changing the routing names to movies, it becomes harder to hack into the web 
 (42) Summary. We did 3 things:
 - Protect form from cross-site request by adding a line of script.
 
-(31 min) Show details button not working. You must access the table as an array using [0], rather than at(0) within the def show method.
+- (31 min) Show details button not working. You must access the table as an array using [0], rather than at(0) within the def show method.
 
-Got error when clicking on Delete hyperlink on the show.html.erb page. Need to change the a href to /movies accordingly.
+### E. Fix the delete hyperlink
+
+1. Got error when clicking on Delete hyperlink on the show.html.erb page after changing the a href to /movies.
 
 ```
-<form action="/insert_movie" method="post">
-  <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
-  <input type="hidden" name="_method" value="patch">
+<!-- app/views/movies/show.html.erb -->
+
+        <a href="/delete_movie/<%= @the_movie.id %>">
+          Delete movie
+        </a>
 ```
 
-### D. Make book table using the rails generate scaffold commmand
+to
+
+```
+<a href="/movies/<%= @the_movie.id %>"> 
+```
+
+2. Need to specify in the form that the http request type is delete. Further modify the above command to:
+
+```
+#views/movies/show.html.erb
+<a href="/movies/<%= @the_movie.id %>" data-turbo-method="delete"> 
+```
+
+### F. Fix update method along the RCAV routine
+
+1. Use the /movies route root in the controller file.
+2. In the show.html.erb form, modify:
+
+```
+    <form action="/movies/<%= @the_movie.id %>" method="post" data-turbo="false">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+```
+
+into
+
+```
+<form action="/movies/<%= @the_movie.id %>" method="post" data-turbo="false">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+    <input type="hidden" name="_method" value="patch">
+```
+
+### G. Use the convention and change `:path_id` to `:id` in dynamic route
+
+1. change .fetch("path_id") to .fetch("id") `app/controllers/movies_controller.rb`.
+2. In the `config/routes.rb` file, change `:path_id` to `:id` as well.
+
+```
+#config/routes.rb
+
+  #get("/movies/:path_id", { :controller => "movies", :action => "show" })
+  get("/movies/:id", { :controller => "movies", :action => "show" })
+  
+  # UPDATE
+  
+  #post("/modify_movie/:path_id", { :controller => "movies", :action => "update" })
+  #patch("/modify_movie/:path_id", { :controller => "movies", :action => "update" })
+  #patch("/movies/:path_id", { :controller => "movies", :action => "update" })
+  patch("/movies/:id", { :controller => "movies", :action => "update" })
+
+  # DELETE
+  #get("/delete_movie/:path_id", { :controller => "movies", :action => "destroy" })
+  #delete("/movies/:path_id", { :controller => "movies", :action => "destroy" })
+  delete("/movies/:id", { :controller => "movies", :action => "destroy" })
+```
+
+### H. Make book table using the rails generate scaffold commmand
 (48 min))
 
 1. In the terminal type: 

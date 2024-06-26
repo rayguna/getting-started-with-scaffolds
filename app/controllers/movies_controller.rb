@@ -8,7 +8,7 @@ class MoviesController < ApplicationController
   end
 
   def show
-    the_id = params.fetch("path_id")
+    the_id = params.fetch("id")
 
     matching_movies = Movie.where({ :id => the_id })
 
@@ -33,7 +33,7 @@ class MoviesController < ApplicationController
   end
 
   def update
-    the_id = params.fetch("path_id")
+    the_id = params.fetch("id")
     the_movie = Movie.where({ :id => the_id }).at(0)
 
     the_movie.title = params.fetch("query_title")
@@ -49,7 +49,7 @@ class MoviesController < ApplicationController
   end
 
   def destroy
-    the_id = params.fetch("path_id")
+    the_id = params.fetch("id")
     the_movie = Movie.where({ :id => the_id })[0] #.at(0)
 
     the_movie.destroy
