@@ -558,3 +558,25 @@ class Movie < ApplicationRecord
   validates :description, presence: true
 end
 ```
+
+
+### Bottom line:
+
+- Went through the exercise of modifying the automatically generated RCAV routine for movies table using the simple non-rails built-in command (draft:resource), e.g.
+
+```
+rails generate draft:resource movie title:string description:text released:boolean
+```
+
+- Went through the exercise of manually modifying each of the RCAV files to suit the industrial grade code. It was a tedious process.
+- The process is simplified using the rails built in command (goal:scaffold), e.g.
+
+```
+rails generate scaffold book title:string description:text released:boolean
+```
+
+- Considered security features to prevent cross-site request forgery. 
+
+- learned that the code is much simplified because the industrial grade script uses the conventional names which Rails can figure out.
+
+***
