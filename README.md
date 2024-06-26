@@ -453,6 +453,53 @@ class MoviesController < ApplicationController
 </form>
 ```
 
+4. Add a link to the new movie form on the index page:
+
+```
+<div>
+  <div>
+    <h1>
+      List of all movies
+    </h1>
+
+    <a href="/movies/new">Add a new movie</a>
+  </div>
+</div>
+```
+
 ### L. Edit the show page
 
+1. Add the following into the routes.rb:
 
+```
+get "/movies/:id/edit", controller: "movies", action: "edit"
+```
+
+### M. Notice and alert messages
+
+We can add the notice and alert messages to the application layout, so that they render on every page:
+
+```
+<!-- app/views/layouts/application.html.erb -->
+
+<!-- ... -->
+  <body>
+    <%= notice %>
+    <%= alert %>
+
+    <%= yield %>
+  </body>
+</html>
+```
+
+In the MoviesController file, change this:
+
+```
+redirect_to("/movies", { :alert => the_movie.errors.full_messages.to_sentence })
+```
+
+to this:
+
+```
+redirect_to("/movies/new", { :alert => the_movie.errors.full_messages.to_sentence })
+```
