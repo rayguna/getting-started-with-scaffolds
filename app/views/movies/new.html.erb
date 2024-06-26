@@ -1,15 +1,38 @@
 <!-- app/views/movies/new.html.erb -->
 
-<h2>
-  Add a new movie
-</h2>
+<div>
+  <div>
+    <h2>
+      Add a new movie
+    </h2>
 
-<form action="/movies" method="post" data-turbo="false">
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <form action="/movies" method="post" data-turbo="false">
+      <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+      <div>
+        <label for="title_box">
+          Title
+        </label>
 
-  <!-- ... -->
+        <input type="text" id="title_box" name="query_title">
+      </div>
 
-  <button>
-    Create movie
-  </button>
-</form>
+      <div>
+        <label for="description_box">
+          Description
+        </label>
+
+        <textarea id="description_box" name="query_description" rows="3"></textarea>
+      </div>
+
+      <div>
+        <input type="checkbox" id="released_box" name="query_released" value="1">
+
+        <label for="released_box">Released</label>
+      </div>
+
+      <button>
+        Create movie
+      </button>
+    </form>
+  </div>
+</div>

@@ -477,7 +477,7 @@ get "/movies/:id/edit", controller: "movies", action: "edit"
 
 ### M. Notice and alert messages
 
-We can add the notice and alert messages to the application layout, so that they render on every page:
+1. We can add the notice and alert messages to the application layout, so that they render on every page:
 
 ```
 <!-- app/views/layouts/application.html.erb -->
@@ -492,7 +492,7 @@ We can add the notice and alert messages to the application layout, so that they
 </html>
 ```
 
-In the MoviesController file, change this:
+2. In the MoviesController file, change this:
 
 ```
 redirect_to("/movies", { :alert => the_movie.errors.full_messages.to_sentence })
@@ -506,11 +506,55 @@ redirect_to("/movies/new", { :alert => the_movie.errors.full_messages.to_sentenc
 
 ### N. Complete the edit.html.erb form
 
-Modify edit.html.erb form into:
+1. Modify edit.html.erb form into:
 
 ```
 <form action="/movies/<%= @the_movie.id %>" method="post" data-turbo="false">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
     <input type="hidden" name="_method" value="patch">
+```
+
+### O. Fix `movies/new` page
+
+Check the RCAV pattern:
+
+1. Check the routes.rb file:
+
+```
+  # Routes for the Movie resource:
+   get("/movies/new", { :controller => "movies", :action => "new" })
+```
+
+2. Check the new.html.erb file:
+
+```
+<!-- app/views/movies/new.html.erb -->
+
+<h2>
+  Add a new movie
+</h2>
+
+<form action="/movies" method="post" data-turbo="false">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+  <!-- ... -->
+
+  <button>
+    Create movie
+  </button>
+</form>
+```
+
+### P. Add validates command
+
+Add the validations to Movie:
+
+```
+# app/models/movie.rb
+
+class Movie < ApplicationRecord
+  validates :title, presence: true
+  validates :description, presence: true
+end
 ```
